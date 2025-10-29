@@ -2,9 +2,8 @@
 ## École Nationale de Commerce et de Gestion (ENCG) - 4ème Année
 HAFSSA DAMAOUN
 ---
-<img src="Graphique 1.png" style="height:464px;margin-right:432px"/>
 
-<img src="graphique2.png" style="height:464px;margin-right:432px"/>
+
 # PARTIE 1 : FONDAMENTAUX DE LA SCIENCE DES DONNÉES
 
 ---
