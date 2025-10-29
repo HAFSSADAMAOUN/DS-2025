@@ -3,6 +3,7 @@
 **Date du rapport :** 29 octobre 2024  
 **Sources :** FMI, Banque Mondiale, Statista  
 **Périmètre :** 58 principales économies mondiales
+
 HAFSSA DAMAOUN
 ---
 <img src="Photo pro 2 (1).jpg" style="height:464px;margin-right:432px"/>
