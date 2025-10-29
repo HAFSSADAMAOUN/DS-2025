@@ -3,9 +3,9 @@
 **Date du rapport :** 29 octobre 2024  
 **Sources :** FMI, Banque Mondiale, Statista  
 **Périmètre :** 58 principales économies mondiales
-
+HAFSSA DAMAOUN
 ---
-
+<img src="Photo pro 2 (1).jpg" style="height:464px;margin-right:432px"/>
 ## 📋 Résumé Exécutif
 
 L'économie mondiale en 2024 présente une configuration marquée par une forte concentration économique, des dynamiques régionales contrastées, et une transition progressive du poids économique vers l'Asie. Le PIB mondial cumulé des 58 principales économies atteint **85 475 milliards USD**, avec une croissance moyenne de **2.5%**.
