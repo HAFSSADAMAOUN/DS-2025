@@ -1,1 +1,517 @@
+# Analyse des Rapports de Criminalité au Brésil
 
+## 📋 Table des Matières
+1. [Introduction](#introduction)
+2. [Configuration de l'Environnement](#configuration)
+3. [Chargement et Préparation des Données](#chargement)
+4. [Analyse Exploratoire](#analyse-exploratoire)
+5. [Modélisation](#modelisation)
+6. [Résultats et Conclusions](#conclusions)
+
+---
+
+## 1. Introduction {#introduction}
+
+### Contexte du Projet
+Cette analyse porte sur les données de rapports de criminalité au Brésil, couvrant la période 2022-2024. L'objectif est d'explorer les tendances, patterns et caractéristiques des incidents criminels rapportés.
+
+### Objectifs
+- Comprendre la distribution temporelle des incidents
+- Analyser l'évolution des versions de rapports
+- Développer des modèles prédictifs
+- Identifier les patterns significatifs
+
+### Source des Données
+- **Source**: Kaggle - Brazilian Crime Reports Dataset
+- **Période**: 2022-2024
+- **Format**: CSV (espace comme délimiteur)
+
+---
+
+## 2. Configuration de l'Environnement {#configuration}
+
+### Bibliothèques Requises
+```python
+# Gestion des avertissements
+import warnings
+warnings.filterwarnings('ignore')
+
+# Manipulation de données
+import numpy as np
+import pandas as pd
+
+# Visualisation
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+plt.switch_backend('Agg')
+import seaborn as sns
+
+# Configuration
+%matplotlib inline
+sns.set(style='whitegrid')
+```
+
+### Configuration de l'Environnement Visuel
+- **Style Seaborn**: `whitegrid` pour une meilleure lisibilité
+- **Backend Matplotlib**: `Agg` pour l'exportation
+- **Intégration**: Mode inline pour Jupyter
+
+---
+
+## 3. Chargement et Préparation des Données {#chargement}
+
+### 3.1 Structure des Données
+
+Les données sont réparties sur **trois fichiers CSV** (un par année) :
+- `data_2022.csv`
+- `data_2023.csv`
+- `data_2024.csv`
+
+### 3.2 Fonction de Chargement
+```python
+def load_and_augment(filename, year):
+    """
+    Charge un fichier CSV et ajoute une colonne 'year'.
+    
+    Paramètres:
+    -----------
+    filename : str
+        Chemin du fichier CSV
+    year : str
+        Année à ajouter comme colonne
+    
+    Returns:
+    --------
+    pd.DataFrame
+        DataFrame avec colonne 'year' ajoutée
+    """
+    try:
+        df = pd.read_csv(filename, delimiter=' ', encoding='ascii')
+        df['year'] = year
+        return df
+    except Exception as e:
+        print(f"Erreur lors du chargement de {filename}: {e}")
+        return pd.DataFrame()
+```
+
+### 3.3 Chargement et Consolidation
+```python
+# Chargement des données annuelles
+df_2022 = load_and_augment('data_2022.csv', '2022')
+df_2023 = load_and_augment('data_2023.csv', '2023')
+df_2024 = load_and_augment('data_2024.csv', '2024')
+
+# Consolidation
+df = pd.concat([df_2022, df_2023, df_2024], ignore_index=True)
+
+print(f'Dimensions du DataFrame: {df.shape}')
+print(f'Colonnes: {df.columns.tolist()}')
+```
+
+**Résultat:**
+```
+Dimensions du DataFrame: (9, 3)
+Colonnes: ['version', 'url_column', 'year']
+```
+
+### 3.4 Nettoyage des Données
+```python
+# Vérification des valeurs manquantes
+if 'version' in df.columns:
+    print(f'Valeurs manquantes (version): {df["version"].isnull().sum()}')
+    df['version'] = df['version'].fillna("")
+
+if 'year' in df.columns:
+    print(f'Valeurs manquantes (year): {df["year"].isnull().sum()}')
+    df['year'] = df['year'].astype('category')
+```
+
+**Aperçu des données nettoyées:**
+```python
+df.head()
+```
+
+| version | url_column | year |
+|---------|-----------|------|
+| v1.0 | http://example.com/2022_a | 2022 |
+| v1.1 | http://example.com/2022_b | 2022 |
+| v1.0 | http://example.com/2022_c | 2022 |
+| v1.1 | http://example.com/2023_a | 2023 |
+| v1.2 | http://example.com/2023_b | 2023 |
+
+---
+
+## 4. Analyse Exploratoire {#analyse-exploratoire}
+
+### 4.1 Distribution Temporelle
+```python
+if 'year' in df.columns and not df['year'].empty:
+    fig, ax = plt.subplots(figsize=(8, 4))
+    sns.countplot(x='year', data=df, palette='viridis', ax=ax)
+    ax.set_title('Distribution des Rapports par Année')
+    ax.set_xlabel('Année')
+    ax.set_ylabel('Nombre de Rapports')
+    plt.tight_layout()
+    plt.show()
+```
+
+![Distribution par Année](attachment:count_by_year.png)
+
+**Observations:**
+- ✅ Distribution **équilibrée** sur les 3 années
+- 📊 **3 rapports** par année (2022, 2023, 2024)
+- 📈 Aucune tendance temporelle apparente dans ce dataset limité
+
+### 4.2 Distribution des Versions
+```python
+if 'version' in df.columns and not df['version'].empty:
+    fig, ax = plt.subplots(figsize=(10, 4))
+    sns.countplot(x='version', data=df, palette='magma', ax=ax)
+    ax.set_title('Distribution des Versions de Rapports')
+    ax.set_xlabel('Version')
+    ax.set_ylabel('Fréquence')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+```
+
+![Distribution par Version](attachment:count_by_version.png)
+
+**Statistiques des Versions:**
+
+| Version | Nombre | Pourcentage |
+|---------|--------|-------------|
+| v1.1 | 3 | 33.3% |
+| v1.2 | 3 | 33.3% |
+| v1.0 | 2 | 22.2% |
+| v1.3 | 1 | 11.1% |
+
+**Insights:**
+- 🔝 Versions **v1.1** et **v1.2** les plus fréquentes
+- 📉 Version **v1.3** la moins utilisée
+- 🔄 Évolution progressive des versions
+
+### 4.3 Informations Structurelles
+```python
+df.info()
+```
+```
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 9 entries, 0 to 8
+Data columns (total 3 columns):
+ #   Column      Non-Null Count  Dtype   
+---  ------      --------------  -----   
+ 0   version     9 non-null      object  
+ 1   url_column  9 non-null      object  
+ 2   year        9 non-null      category
+dtypes: category(1), object(2)
+memory usage: 417.0+ bytes
+```
+
+**Points clés:**
+- ✅ **Aucune valeur manquante**
+- 📊 **9 observations** complètes
+- 💾 Utilisation mémoire optimisée (417 bytes)
+
+---
+
+## 5. Modélisation {#modelisation}
+
+### 5.1 Création de la Variable Cible
+
+Pour permettre une analyse prédictive, nous créons une variable cible synthétique :
+```python
+# Mapping des versions
+version_mapping = {
+    'v1.0': 1, 
+    'v1.1': 2, 
+    'v1.2': 3, 
+    'v1.3': 4
+}
+
+df['mapped_version'] = df['version'].map(version_mapping)
+
+# Création de la cible synthétique
+df['synthetic_target'] = (df['year'].astype(int) - 2022) * 10 + df['mapped_version']
+```
+
+**Aperçu de la variable cible:**
+```python
+df[['version', 'year', 'synthetic_target']].head()
+```
+
+| version | year | synthetic_target |
+|---------|------|------------------|
+| v1.0 | 2022 | 1 |
+| v1.1 | 2022 | 2 |
+| v1.0 | 2022 | 1 |
+| v1.1 | 2023 | 12 |
+| v1.2 | 2023 | 13 |
+
+### 5.2 Préparation des Features
+```python
+from sklearn.model_selection import train_test_split
+
+# Encodage one-hot
+X = pd.get_dummies(
+    df[['version', 'year']], 
+    columns=['version', 'year'], 
+    drop_first=True
+)
+
+y = df['synthetic_target']
+
+# Split train/test (80/20)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+```
+
+**Dimensions:**
+- 📊 Features (X): `(9, 5)`
+- 🎯 Target (y): `(9,)`
+- 🎓 Training set: `(7, 5)`
+- 🧪 Test set: `(2, 5)`
+
+### 5.3 Régression Linéaire
+```python
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Entraînement
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Prédictions
+y_pred = model.predict(X_test)
+
+# Métriques
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"MSE: {mse:.2f}")
+print(f"R²: {r2:.2f}")
+```
+
+**Résultats:**
+```
+MSE: 70.31
+R²: 0.42
+```
+
+#### Visualisation des Prédictions
+```python
+plt.figure(figsize=(8, 6))
+plt.scatter(y_test, y_pred, alpha=0.7, color='steelblue')
+plt.plot([y.min(), y.max()], [y.min(), y.max()], 'r--', lw=2, label='Prédiction parfaite')
+plt.xlabel('Valeurs Réelles')
+plt.ylabel('Valeurs Prédites')
+plt.title('Régression Linéaire: Réel vs Prédit')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
+```
+
+![Scatter Plot](attachment:regression_plot.png)
+
+### 5.4 Régression Logistique
+
+Pour la classification, nous créons une variable binaire :
+```python
+# Création de la cible binaire
+median_target = df['synthetic_target'].median()
+df['binary_target'] = (df['synthetic_target'] >= median_target).astype(int)
+
+print(f"Médiane: {median_target}")
+print(df['binary_target'].value_counts())
+```
+```
+Médiane: 12.0
+1    6
+0    3
+```
+```python
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Préparation des données
+X_log = pd.get_dummies(df[['version', 'year']], columns=['version', 'year'], drop_first=True)
+y_log = df['binary_target']
+
+X_train_log, X_test_log, y_train_log, y_test_log = train_test_split(
+    X_log, y_log, test_size=0.2, random_state=42, stratify=y_log
+)
+
+# Entraînement
+log_model = LogisticRegression(random_state=42, solver='liblinear')
+log_model.fit(X_train_log, y_train_log)
+
+# Prédictions
+y_pred_log = log_model.predict(X_test_log)
+
+# Métriques
+accuracy = accuracy_score(y_test_log, y_pred_log)
+conf_matrix = confusion_matrix(y_test_log, y_pred_log)
+
+print(f"Accuracy: {accuracy:.2f}")
+print("\nMatrice de Confusion:")
+print(conf_matrix)
+```
+
+**Résultats:**
+```
+Accuracy: 0.50
+
+Matrice de Confusion:
+[[0 1]
+ [0 1]]
+```
+
+#### Visualisation de la Matrice de Confusion
+```python
+plt.figure(figsize=(6, 5))
+sns.heatmap(
+    conf_matrix, 
+    annot=True, 
+    fmt='d', 
+    cmap='Blues',
+    xticklabels=['Classe 0', 'Classe 1'],
+    yticklabels=['Classe 0', 'Classe 1']
+)
+plt.xlabel('Prédiction')
+plt.ylabel('Réalité')
+plt.title('Matrice de Confusion - Régression Logistique')
+plt.show()
+```
+
+![Confusion Matrix](attachment:confusion_matrix.png)
+
+---
+
+## 6. Résultats et Conclusions {#conclusions}
+
+### 📊 Résultats Clés
+
+#### Données
+- ✅ **9 observations** consolidées (2022-2024)
+- ✅ **Aucune valeur manquante**
+- ✅ Distribution équilibrée temporellement
+- ⚠️ Dataset limité pour une analyse approfondie
+
+#### Distributions
+- 📈 Versions **v1.1** et **v1.2** dominent (33.3% chacune)
+- 📉 Version **v1.3** rare (11.1%)
+- ⚖️ Équilibre parfait entre années
+
+#### Performance des Modèles
+
+| Modèle | Métrique | Score | Interprétation |
+|--------|----------|-------|----------------|
+| Régression Linéaire | R² | 0.42 | Modéré |
+| Régression Linéaire | MSE | 70.31 | Élevé |
+| Régression Logistique | Accuracy | 0.50 | Faible |
+
+### 🔍 Insights Principaux
+
+1. **Qualité des Données**
+   - ✅ Données propres et structurées
+   - ⚠️ Volume insuffisant pour modélisation robuste
+   - 📊 Nécessite davantage d'observations
+
+2. **Modélisation**
+   - R² = 0.42 → Le modèle explique 42% de la variance
+   - Accuracy = 0.50 → Performance aléatoire pour la classification
+   - 🎯 Nécessite plus de features et d'observations
+
+3. **Évolution des Versions**
+   - 🔄 Progression cohérente (v1.0 → v1.3)
+   - 📈 Adoption progressive des nouvelles versions
+   - 💡 Potentiel pour analyse de migration
+
+### ⚠️ Limitations
+
+1. **Volume de Données**
+   - 9 observations trop limitées
+   - Risque d'overfitting
+   - Généralisabilité compromise
+
+2. **Features Disponibles**
+   - Seulement 2 variables prédictives
+   - Manque de contexte criminel
+   - Information limitée
+
+3. **Validation**
+   - Split test/train déséquilibré (7/2)
+   - Pas de cross-validation
+   - Métriques peu fiables
+
+### 🎯 Recommandations
+
+#### Court Terme
+1. **Collecter Plus de Données**
+   - 📊 Viser minimum 100-200 observations
+   - 🔄 Élargir la période temporelle
+   - 📍 Inclure données géographiques
+
+2. **Enrichir les Features**
+   - 🏷️ Type de crime
+   - 📍 Localisation géographique
+   - ⏰ Horodatage précis
+   - 👥 Données démographiques
+
+3. **Améliorer la Modélisation**
+   - ✅ Cross-validation k-fold
+   - 🎯 Modèles plus sophistiqués (Random Forest, XGBoost)
+   - 📊 Analyse de séries temporelles
+
+#### Long Terme
+1. **Système de Monitoring**
+   - 📈 Tableau de bord temps réel
+   - 🚨 Alertes automatiques
+   - 📊 KPIs criminels
+
+2. **Analyse Prédictive**
+   - 🔮 Prédiction de hotspots
+   - ⏰ Prévision temporelle
+   - 🎯 Allocation optimale des ressources
+
+3. **Intégration Opérationnelle**
+   - 🔗 API de données en temps réel
+   - 🗺️ Visualisation géospatiale
+   - 📱 Application mobile
+
+### 📚 Références
+
+- **Dataset**: [Kaggle - Brazilian Crime Reports](https://www.kaggle.com/code/devraai/brazilian-crime-reports-data-analysis/)
+- **Bibliothèques**: pandas, scikit-learn, seaborn, matplotlib
+- **Méthodes**: Régression linéaire, régression logistique, one-hot encoding
+
+---
+
+## 📝 Annexes
+
+### Code Complet
+
+Le code complet est disponible dans le notebook Jupyter :
+`brazilian-crime-reports-data-analysis.ipynb`
+
+### Environnement Technique
+
+- **Python**: 3.8+
+- **pandas**: 1.3+
+- **scikit-learn**: 0.24+
+- **matplotlib**: 3.3+
+- **seaborn**: 0.11+
+
+### Contact
+
+Pour questions ou suggestions :
+- 📧 Email: [votre-email]
+- 💼 LinkedIn: [votre-profil]
+- 🐙 GitHub: [votre-repo]
+
+---
+
+*Rapport généré le: 01/12/2025*
+*Version: 1.0*
