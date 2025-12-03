@@ -1,4 +1,6 @@
 # Compte Rendu Détaillé de l'Analyse des Données Football
+# DAMAOUN HAFSA
+
 
 ## 📋 **Contexte et Objectif de l'Analyse**
 Cette analyse explore un dataset d'événements footballistiques (environ 20 Mo de données brutes) provenant d'un notebook Jupyter (*Football_Events.ipynb*). L'objectif principal est d'examiner les **relations numériques** entre variables clés comme le temps d'événement (`time`), le type d'événement (`eventtype`, `eventtype2`), la localisation du tir (`shotplace`), le résultat (`shotoutcome`, `isgoal`), la position (`location`), la partie du corps (`bodypart`), le mode d'assistance (`assistmethod`), et le contexte (`situation`, `fastbreak`).  
