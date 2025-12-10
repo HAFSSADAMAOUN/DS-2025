@@ -1,1 +1,138 @@
+Rapport d'Analyse : Interdépendance des cycles économiques Maroc - Union Européenne (1990-2024)
 
+Date : 10 Décembre 2024
+Source des données : Banque Mondiale - Taux de croissance du PIB (NY.GDP.MKTP.KD.ZG)
+Période étudiée : 1990 - 2024
+Sujets : Maroc (MAR) vs. Zone Euro/Union Européenne (EU)
+
+1. Introduction
+
+L'objectif de cette étude est d'analyser la relation économique entre le Maroc et l'Union Européenne (UE), son principal partenaire commercial. En utilisant les données de croissance annuelle du PIB (Produit Intérieur Brut) sur les trois dernières décennies, nous cherchons à quantifier le degré de synchronisation des cycles économiques et la sensibilité de l'économie marocaine aux fluctuations européennes.
+
+2. Analyse Visuelle des Tendances (1990-2024)
+
+L'observation des courbes d'évolution du PIB met en évidence trois dynamiques majeures :
+
+Volatilité structurelle du Maroc : La courbe du Maroc présente une allure en "dents de scie" beaucoup plus marquée que celle de l'UE. Cette volatilité est historiquement liée à la forte dépendance de l'économie marocaine au secteur agricole et à la pluviométrie (les années de sécheresse entraînant souvent une chute brutale du PIB, indépendamment de la conjoncture européenne).
+
+Synchronisation lors des chocs majeurs :
+
+Crise de 2008-2009 : On observe une décélération simultanée, bien que l'impact ait été plus sévère pour l'UE (-4.5% environ) que pour le Maroc, qui a mieux résisté à cette période.
+
+Crise COVID-19 (2020) : La synchronisation est totale et brutale. Les deux économies plongent simultanément (UE ~ -5.6%, Maroc ~ -7.2%), illustrant l'arrêt global des chaînes de valeur, du tourisme et des transferts de fonds.
+
+Reprise post-COVID : Un effet de rebond mécanique est visible en 2021 pour les deux zones, suivi d'une normalisation en 2022-2024.
+
+3. Analyse Statistique
+3.1. Matrice de Corrélation
+
+L'analyse de corrélation de Pearson révèle le lien suivant :
+
+Indicateur	Coefficient de Corrélation (
+𝑟
+r
+)
+Corrélation Maroc / UE	0.39
+
+Interprétation :
+Il existe une corrélation positive modérée. Un coefficient de 0.39 indique que les cycles économiques vont généralement dans la même direction, mais le lien n'est pas absolu. Cela suggère que si l'UE influence le Maroc, des facteurs endogènes propres au Maroc (climat, politiques intérieures) jouent un rôle prépondérant dans les variations annuelles.
+
+3.2. Modélisation par Régression Linéaire
+
+Pour quantifier l'impact de la croissance européenne sur celle du Maroc, un modèle de régression linéaire simple a été établi : 
+𝑌
+=
+𝛽
+1
+𝑋
++
+𝛽
+0
+Y=β
+1
+	​
+
+X+β
+0
+	​
+
+
+Variable indépendante (
+𝑋
+X
+) : Croissance UE
+
+Variable dépendante (
+𝑌
+Y
+) : Croissance Maroc
+
+Résultats du modèle :
+
+Ordonnée à l'origine (Intercept) : 2.39
+
+Coefficient (Pente) : 0.71
+
+R-carré (
+𝑅
+2
+R
+2
+) : 0.15
+
+Équation résultante :
+
+Croissance
+𝑀
+𝑎
+𝑟
+𝑜
+𝑐
+=
+0.71
+×
+Croissance
+𝑈
+𝐸
++
+2.39
+Croissance
+Maroc
+	​
+
+=0.71×Croissance
+UE
+	​
+
++2.39
+
+Interprétation économique :
+
+Croissance autonome (2.39%) : Si la croissance de l'UE est nulle (0%), le modèle prédit que l'économie marocaine croîtrait théoriquement de 2.39%. Cela reflète le potentiel de croissance structurel du Maroc hors influence européenne.
+
+Sensibilité (0.71) : Pour chaque point de pourcentage de croissance supplémentaire dans l'UE, la croissance marocaine augmente en moyenne de 0.71%. C'est un indicateur de transmission relativement fort des chocs économiques.
+
+Pouvoir explicatif (
+𝑅
+2
+=
+0.15
+R
+2
+=0.15
+) : Ce chiffre est crucial. Il signifie que la croissance de l'UE n'explique que 15% de la variabilité de la croissance marocaine. Les 85% restants sont expliqués par d'autres variables non incluses dans ce modèle (pluviométrie, prix des phosphates, demande intérieure, etc.).
+
+4. Conclusion
+
+L'analyse des données de la Banque Mondiale permet de tirer deux conclusions apparemment contradictoires mais complémentaires :
+
+Une intégration réelle : La relation linéaire positive (pente de 0.71) confirme que la santé économique de l'Union Européenne est un moteur important pour le Maroc (via les exportations, les IDE, le tourisme et les MRE).
+
+Une autonomie volatile : La faible corrélation (0.39) et le faible 
+𝑅
+2
+R
+2
+ (0.15) prouvent que l'économie marocaine reste fortement soumise à ses propres cycles, dictés en grande partie par les aléas climatiques (campagnes agricoles) qui brouillent la corrélation avec le partenaire européen.
+
+Note : Les données 2024-2025 peuvent être sujettes à des révisions ultérieures par la Banque Mondiale.
